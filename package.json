@@ -1,0 +1,34 @@
+{
+  "name": "catalog_server",
+  "version": "1.0.0",
+  "description": "MERN Ecommerce Catalog microservice — product, category, brand, review, wishlist. Deployed/run independently of the other services and the API gateway.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon",
+    "start": "cross-env NODE_ENV=production node index.js",
+    "test": "jest --coverage",
+    "test:watch": "jest --watch",
+    "analyze:complexity": "eslint --no-eslintrc --env node,es2021 --parser-options=ecmaVersion:2021 --rule \"{\\\"complexity\\\": [\\\"warn\\\", 1]}\" \"**/*.js\" --ignore-pattern node_modules --ignore-pattern coverage --ignore-pattern \"**/*.test.js\" --ignore-pattern tests"
+  },
+  "dependencies": {
+    "chalk": "^2.4.2",
+    "cors": "^2.8.5",
+    "dotenv": "^8.0.0",
+    "express": "^4.17.1",
+    "helmet": "^4.6.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.5.11",
+    "mongoose-slug-generator": "^1.0.4",
+    "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0"
+  },
+  "devDependencies": {
+    "bcryptjs": "^2.4.3",
+    "cross-env": "^5.2.1",
+    "eslint": "^8.57.0",
+    "jest": "^30.4.2",
+    "mongodb-memory-server": "^11.2.0",
+    "nodemon": "^1.19.1",
+    "supertest": "^7.2.2"
+  }
+}
