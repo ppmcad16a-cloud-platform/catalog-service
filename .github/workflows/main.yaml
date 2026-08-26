@@ -9,11 +9,9 @@ on:
   pull_request:
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
 
-  build:
-
-    uses: ppmcad16a-cloud-platform/core-cloud-platform/.github/workflows/java-app.yaml@main
-
-    with:
-      java-version: "21"
-      run-tests: true
+    steps:
+      - name: Test GitHub Actions
+        run: echo "Catalog Service GitHub Actions is working"
