@@ -4,12 +4,15 @@ on:
   push:
     branches:
       - main
+      - develop
 
   pull_request:
 
 jobs:
+
   build:
-    uses: YOUR-ORG/core-cloud-platform/.github/workflows/java-app.yaml@main
+
+    uses: ppmcad16a-cloud-platform/core-cloud-platform/.github/workflows/java-app.yaml@main
 
     with:
       java-version: "21"
