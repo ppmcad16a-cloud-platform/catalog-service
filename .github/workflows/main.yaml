@@ -1,4 +1,4 @@
-name: Catalog Service CI
+name: Catalog Service CI that will reuse the node-app.yaml workflow in the core-cloud-platform repository
 
 on:
   push:
