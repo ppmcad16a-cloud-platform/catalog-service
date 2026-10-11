@@ -19,12 +19,9 @@ const connect = async () => {
     : `${process.env.MONGO_URI}/`;
 
   connectedUri = `${baseUri}${dbName}`;
-  await mongoose.connect(connectedUri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false,
-    useCreateIndex: true
-  });
+  // Same strictQuery setting as utils/db.js (Mongoose 5 behaviour).
+  mongoose.set('strictQuery', false);
+  await mongoose.connect(connectedUri);
 };
 
 // The exact per-file database URI connect() picked, for tests that need to

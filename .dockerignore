@@ -1,0 +1,13 @@
+# Only what the image needs is sent to "docker build".
+node_modules
+coverage
+tests
+.git
+.github
+.env
+.env.*
+**/*.test.js
+jest.config.js
+*.md
+Dockerfile
+.dockerignore
