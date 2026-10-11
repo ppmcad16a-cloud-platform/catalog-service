@@ -2,42 +2,45 @@ const mongoose = require('mongoose');
 
 const setupDB = require('./db');
 
+const makeLogger = () => ({ info: jest.fn(), error: jest.fn() });
+
 afterEach(() => {
   jest.restoreAllMocks();
 });
 
 describe('setupDB', () => {
-  it('connects successfully and logs the success message', async () => {
+  it('connects and logs success', async () => {
     jest.spyOn(mongoose, 'connect').mockResolvedValue({});
-    const logSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+    const logger = makeLogger();
+    const onFailure = jest.fn();
+
+    await setupDB({ logger, onFailure });
+
+    expect(mongoose.connect).toHaveBeenCalledWith(process.env.MONGO_URI);
+    expect(mongoose.get('strictQuery')).toBe(false);
+    expect(logger.info).toHaveBeenCalledWith('MongoDB connected');
+    expect(onFailure).not.toHaveBeenCalled();
+  });
+
+  it('logs and calls onFailure when the first connection fails', async () => {
+    const error = new Error('conn failed');
+    jest.spyOn(mongoose, 'connect').mockRejectedValue(error);
+    const logger = makeLogger();
+    const onFailure = jest.fn();
+
+    await setupDB({ logger, onFailure });
+
+    expect(logger.error).toHaveBeenCalledWith({ err: error }, 'MongoDB connection failed');
+    expect(onFailure).toHaveBeenCalledWith(error);
+  });
+
+  it('defaults to console logging and exiting the process with code 1', async () => {
+    jest.spyOn(mongoose, 'connect').mockRejectedValue(new Error('conn failed'));
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+    const exitSpy = jest.spyOn(process, 'exit').mockImplementation(() => {});
 
     await setupDB();
-    // Flush the .then() chained onto the (mocked) connect() promise.
-    await new Promise(resolve => setImmediate(resolve));
 
-    expect(mongoose.connect).toHaveBeenCalledWith(
-      process.env.MONGO_URI,
-      expect.objectContaining({ useNewUrlParser: true })
-    );
-    expect(logSpy).toHaveBeenCalled();
-  });
-
-  it('logs the error but still resolves when the connection attempt rejects', async () => {
-    jest.spyOn(mongoose, 'connect').mockReturnValue(Promise.reject(new Error('conn failed')));
-    const logSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
-
-    await expect(setupDB()).resolves.toBeUndefined();
-    await new Promise(resolve => setImmediate(resolve));
-
-    expect(logSpy).toHaveBeenCalled();
-  });
-
-  it('returns null if something inside throws synchronously', async () => {
-    jest.spyOn(mongoose, 'set').mockImplementation(() => {
-      throw new Error('sync fail');
-    });
-
-    const result = await setupDB();
-    expect(result).toBeNull();
+    expect(exitSpy).toHaveBeenCalledWith(1);
   });
 });
