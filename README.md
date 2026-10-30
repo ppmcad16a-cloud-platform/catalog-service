@@ -46,3 +46,5 @@ Node's coverage tooling has no JaCoCo-style complexity counter; `npm run analyze
 - Image: `docker build -t catalog-service:local .` (multi-stage, non-root, npm removed at runtime).
 - Mongoose 6 (`strictQuery` kept `false` to match the original Mongoose 5 behaviour).
 <!-- CD test 2026-10-29: merged -> pushed to 3 registries -> deployed by Jenkins -->
+
+Deployed by the CI/CD demo on 2026-10-30 23:41.
